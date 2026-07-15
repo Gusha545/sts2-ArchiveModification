@@ -1,0 +1,44 @@
+<Window x:Class="ArchiveModification.RelicSelector"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="选择遗物"
+        Height="800"
+        Width="1000"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,10">
+            <TextBox x:Name="SearchBox" Width="200" Text="搜索遗物..." Margin="0,0,8,0" GotFocus="SearchBox_GotFocus" LostFocus="SearchBox_LostFocus"/>
+            <Button Content="搜索" Click="Search_Click" Width="60"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="RelicGrid">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Gray" BorderThickness="1" Margin="4" Padding="4" 
+                                Background="White" Cursor="Hand"
+                                MouseLeftButtonDown="RelicItem_MouseLeftButtonDown">
+                            <StackPanel HorizontalAlignment="Center" Width="80" ToolTip="{Binding Description}" ToolTipService.ShowDuration="60000">
+                                <Image Source="{Binding ImageSource}" Height="64" Width="64" 
+                                       Stretch="Uniform" Margin="0,0,0,4"/>
+                                <TextBlock Text="{Binding ChineseName}" TextWrapping="Wrap" 
+                                           TextAlignment="Center" FontSize="11" 
+                                           MaxHeight="40"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Window>

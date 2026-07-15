@@ -1,0 +1,5 @@
+E:\Slay the Spire 2\ArchiveModification\bin\Release\net8.0-windows\publish\ArchiveModification.exe
+E:\Slay the Spire 2\ArchiveModification\bin\Release\net8.0-windows\publish\ArchiveModification.dll
+E:\Slay the Spire 2\ArchiveModification\bin\Release\net8.0-windows\publish\ArchiveModification.deps.json
+E:\Slay the Spire 2\ArchiveModification\bin\Release\net8.0-windows\publish\ArchiveModification.runtimeconfig.json
+E:\Slay the Spire 2\ArchiveModification\bin\Release\net8.0-windows\publish\ArchiveModification.pdb
