@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Windows;
@@ -16,27 +15,28 @@ public partial class RelicSelector : Window
     public string? SelectedRelicId { get; private set; }
 
     private readonly List<RelicItem> _allRelics = new();
-    private readonly string _imagesPath;
 
     public RelicSelector(Dictionary<string, string> relicsChineseNames, Dictionary<string, string> relicsDescriptions)
     {
         InitializeComponent();
-        
-        _imagesPath = @"d:\Desktop\tools\Godot_v4.5.1-stable_mono_win64\Slay the Spire 2\images\relics";
-        
+
         LoadRelics(relicsChineseNames, relicsDescriptions);
     }
 
     private void LoadRelics(Dictionary<string, string> relicsChineseNames, Dictionary<string, string> relicsDescriptions)
     {
+        // 获取程序所在目录
+        var exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        var imagesPath = Path.Combine(exeDirectory, "relics");
+
         foreach (var kvp in relicsChineseNames)
         {
             var relicId = kvp.Key;
             var chineseName = kvp.Value;
             relicsDescriptions.TryGetValue(relicId, out var description);
-            
-            var imagePath = GetImagePath(relicId);
-            
+
+            var imagePath = GetImagePath(imagesPath, relicId);
+
             _allRelics.Add(new RelicItem
             {
                 Id = relicId,
@@ -45,37 +45,40 @@ public partial class RelicSelector : Window
                 ImageSource = imagePath != null ? new BitmapImage(new Uri(imagePath)) : null
             });
         }
-        
+
         _allRelics.Sort((a, b) => a.ChineseName.CompareTo(b.ChineseName));
         RelicGrid.ItemsSource = _allRelics;
     }
 
-    private string? GetImagePath(string relicId)
+    private string? GetImagePath(string imagesPath, string relicId)
     {
-        var fileName = relicId.ToLower().Replace("_", "_") + ".png";
-        var mainPath = Path.Combine(_imagesPath, fileName);
-        
+        // 构建文件路径（小写）
+        var fileName = relicId.ToLower() + ".png";
+        var mainPath = Path.Combine(imagesPath, fileName);
+
+        // 先在主目录查找
         if (File.Exists(mainPath))
             return mainPath;
-        
-        var betaPath = Path.Combine(_imagesPath, "beta", fileName);
+
+        // 再在 beta 子目录查找
+        var betaPath = Path.Combine(imagesPath, "beta", fileName);
         if (File.Exists(betaPath))
             return betaPath;
-        
+
         return null;
     }
 
     private void Search_Click(object sender, RoutedEventArgs e)
     {
         var searchText = SearchBox.Text.Trim().ToLower();
-        
+
         if (string.IsNullOrEmpty(searchText))
         {
             RelicGrid.ItemsSource = _allRelics;
         }
         else
         {
-            var filtered = _allRelics.Where(r => 
+            var filtered = _allRelics.Where(r =>
                 r.ChineseName.ToLower().Contains(searchText) ||
                 r.Id.ToLower().Contains(searchText)).ToList();
             RelicGrid.ItemsSource = filtered;
